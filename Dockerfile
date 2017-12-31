@@ -1,8 +1,7 @@
-FROM multiarch/debian-debootstrap:amd64-jessie
+FROM multiarch/debian-debootstrap:amd64-stretch
 
 # Set download urls
 ENV \
-    JAVA_URL="https://www.azul.com/downloads/zulu/zdk-8-ga-linux_x64.tar.gz" \
     DASH_LISTENER_URL="https://github.com/syphr42/dash-listener/archive/master.zip"
 
 # Set variables and locales
@@ -11,7 +10,7 @@ ENV \
     EXTRA_JAVA_OPTS="" \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8
+    LANGUAGE=en_US.UTF-8 \
     DASH_CONFIG="conf/config.properties"
 
 # Set arguments on build
@@ -37,6 +36,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
     maven \
+    openjdk-8-jdk-headless \
     ca-certificates \
     fontconfig \
     locales \
@@ -49,39 +49,14 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
 ln -s -f /bin/true /usr/bin/chfn
 
-# Install java
-#ENV JAVA_HOME='/usr/lib/java-8'
-#RUN wget -nv -O /tmp/java.tar.gz ${JAVA_URL} && \
-#    mkdir ${JAVA_HOME} && \
-#    tar -xvf /tmp/java.tar.gz --strip-components=1 -C ${JAVA_HOME} && \
-#    rm /tmp/java.tar.gz && \
-#    update-alternatives --install /usr/bin/java java ${JAVA_HOME}/bin/java 50 && \
-#    update-alternatives --install /usr/bin/javac javac ${JAVA_HOME}/bin/javac 50
-#RUN cd /tmp \
-#    && wget https://cdn.azul.com/zcek/bin/ZuluJCEPolicies.zip \
-#    && unzip -jo -d ${JAVA_HOME}/jre/lib/security /tmp/ZuluJCEPolicies.zip \
-#    && rm /tmp/ZuluJCEPolicies.zip
-
-# Install gosu
-#ENV GOSU_VERSION 1.10
-#RUN set -x \
-#    && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
-#    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
-#    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
-#    && export GNUPGHOME \
-#    && GNUPGHOME="$(mktemp -d)" \
-#    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
-#    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
-#    && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
-#    && chmod +x /usr/local/bin/gosu
-
 # Install dash-listener
-RUN wget -nv -O /tmp/dash-listener.zip ${DASH_LISTENER_URL} && \
+RUN mkdir -p ${APPDIR}/src && \
+    wget -nv -O /tmp/dash-listener.zip ${DASH_LISTENER_URL} && \
     unzip -q /tmp/dash-listener.zip -d ${APPDIR}/src && \
     rm /tmp/dash-listener.zip && \
-    cd ${APPDIR}/src && \
+    cd ${APPDIR}/src/dash-listener-master && \
     mvn clean package -P executable && \
-    cp ${APPDIR}/target/dash-listener-*.jar ${APPDIR}/dash-listener.jar && \
+    cp ${APPDIR}/src/dash-listener-master/target/dash-listener-*.jar ${APPDIR}/dash-listener.jar && \
     rm -rf ${APPDIR}/src && \
     mkdir -p ${APPDIR}/conf
 
@@ -92,4 +67,4 @@ VOLUME ${APPDIR}/conf
 WORKDIR ${APPDIR}
 
 # Execute command
-CMD ["java", "-jar", "dash-listener.jar", "$DASH_CONFIG"]
+CMD java -jar dash-listener.jar ${DASH_CONFIG}
