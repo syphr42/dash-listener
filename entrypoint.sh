@@ -8,3 +8,5 @@ for cert in "${APPDIR}"/conf/*.crt; do
 done
 
 update-ca-certificates
+
+exec "$@"
