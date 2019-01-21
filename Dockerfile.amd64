@@ -66,5 +66,9 @@ VOLUME ${APPDIR}/conf
 # Set working directory, expose and entrypoint
 WORKDIR ${APPDIR}
 
+# Setup entrypoint to prepare container
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT [ "/entrypoint.sh" ]
+
 # Execute command
 CMD java -jar dash-listener.jar ${DASH_CONFIG}
