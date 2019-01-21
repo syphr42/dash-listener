@@ -132,12 +132,13 @@ public class DashRelay implements PcapNetworkInterfaceListener
 
         String url = config.getProperty("url");
         String item = config.getProperty("item");
+        String command = config.getProperty("command", "TOGGLE");
 
         // TODO redesign
         try
         {
             HttpResponse response = Request.Post(url + "/rest/items/" + item)
-                                           .bodyByteArray("TOGGLE".getBytes())
+                                           .bodyByteArray(command.getBytes())
                                            .execute()
                                            .returnResponse();
 
