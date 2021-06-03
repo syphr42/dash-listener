@@ -14,7 +14,7 @@
 
     <properties>
         <pcap4j.version>1.6.6</pcap4j.version>
-        <httpclient.version>4.5.4</httpclient.version>
+        <httpclient.version>4.5.13</httpclient.version>
     </properties>
 
     <dependencies>
