@@ -31,7 +31,7 @@ jobs:
         id: version
         uses: mikefarah/yq@v4
         with:
-          cmd: yq --input-format xml .project.version pom.xml
+          cmd: yq eval --input-format xml .project.version pom.xml
 
       - name: Build images
         run: |
