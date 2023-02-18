@@ -28,13 +28,13 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Print yq version
-        uses: mikefarah/yq@v4
+        uses: mikefarah/yq@master
         with:
           cmd: yq --version
 
       - name: Get project version
         id: version
-        uses: mikefarah/yq@v4
+        uses: mikefarah/yq@master
         with:
           cmd: yq --input-format xml '.project.version' pom.xml
 
