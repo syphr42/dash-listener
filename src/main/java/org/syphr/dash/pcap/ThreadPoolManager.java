@@ -20,19 +20,19 @@ public class ThreadPoolManager
     protected static final long THREAD_TIMEOUT = 65L;
 
     /**
-     * Returns an instance of a scheduled thread pool service. If it is the
-     * first request for the given pool name, the instance is newly created.
+     * Returns an instance of a scheduled thread pool service. If it is the first
+     * request for the given pool name, the instance is newly created.
      *
-     * @param poolName
-     *            a short name used to identify the pool, e.g. "discovery"
+     * @param poolName a short name used to identify the pool, e.g. "discovery"
+     *
      * @return an instance to use
      */
     static public ScheduledExecutorService getScheduledPool(String poolName)
     {
         ScheduledExecutorService pool = Executors.newScheduledThreadPool(DEFAULT_THREAD_POOL_SIZE,
                                                                          new NamedThreadFactory(poolName));
-        ((ThreadPoolExecutor)pool).setKeepAliveTime(THREAD_TIMEOUT, TimeUnit.SECONDS);
-        ((ThreadPoolExecutor)pool).allowCoreThreadTimeOut(true);
+        ((ThreadPoolExecutor) pool).setKeepAliveTime(THREAD_TIMEOUT, TimeUnit.SECONDS);
+        ((ThreadPoolExecutor) pool).allowCoreThreadTimeOut(true);
         return pool;
     }
 
@@ -52,20 +52,17 @@ public class ThreadPoolManager
         {
             this.name = threadPool;
             this.namePrefix = "DASH-" + threadPool + "-";
-            SecurityManager s = System.getSecurityManager();
-            group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+            group = Thread.currentThread().getThreadGroup();
         }
 
         @Override
         public Thread newThread(Runnable r)
         {
             Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-            if (!t.isDaemon())
-            {
+            if (!t.isDaemon()) {
                 t.setDaemon(true);
             }
-            if (t.getPriority() != Thread.NORM_PRIORITY)
-            {
+            if (t.getPriority() != Thread.NORM_PRIORITY) {
                 t.setPriority(Thread.NORM_PRIORITY);
             }
 
