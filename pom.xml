@@ -13,8 +13,8 @@
     <name>Amazon Dash Button Listener</name>
 
     <properties>
-        <compiler.source.level>17</compiler.source.level>
-        <compiler.target.level>17</compiler.target.level>
+        <compiler.source.level>11</compiler.source.level>
+        <compiler.target.level>11</compiler.target.level>
 
         <pcap4j.version>1.8.2</pcap4j.version>
         <httpclient.version>4.5.14</httpclient.version>

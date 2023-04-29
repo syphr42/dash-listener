@@ -1,5 +1,5 @@
-ARG BUILD_BASE_IMAGE=docker.io/library/maven:3-eclipse-temurin-17
-ARG RUNTIME_BASE_IMAGE=docker.io/library/eclipse-temurin:17-jre-jammy
+ARG BUILD_BASE_IMAGE=docker.io/library/maven:3-eclipse-temurin-11
+ARG RUNTIME_BASE_IMAGE=docker.io/library/eclipse-temurin:11-jre-jammy
 
 # Stage 1: Build
 FROM ${BUILD_BASE_IMAGE} AS build
